@@ -33,7 +33,7 @@ myHIDSimplePacketComs.connect();
 pp = PacketProcessor(myHIDSimplePacketComs); 
 try
   SERV_ID = 01;            % we will be talking to server ID 37 on
-                           % the Nucleo
+  CALI_ID = 02;                       % the Nucleo
 
   DEBUG   = true;          % enables/disables debug prints
 
@@ -41,6 +41,7 @@ try
   % bytes for this purpose. Recall thite('Lab1test.csv', returnPacket','delimiter',' ','-append')at the HID interface supports
   % packet sizes up to 64 bytes.
   packet = zeros(15, 1, 'single');
+  cali_packet = zeros(4, 1, 'single');
 
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
@@ -48,7 +49,7 @@ try
   viaPts = [0, -400, 400, -400, 400, 0];
 
   
-
+    fopen('Lab1test.csv', 'w');
   % Iterate through a sine wave for joint values
   for k = viaPts
       tic
@@ -59,6 +60,7 @@ try
 
       % Send packet to the server and get the response
       returnPacket = pp.command(SERV_ID, packet);
+      
       dlmwrite('Lab1test.csv', returnPacket','delimiter',' ','-append');
     
       if DEBUG
@@ -71,6 +73,14 @@ try
       pause(1) %timeit(returnPacket) !FIXME why is this needed?
       
   end
+  pp.shutdown()
+  pause(.2)
+  jointHome = calibrate('Lab1test.csv');
+  for i = (1:3)
+      cali_packet(i) = jointHome(i);
+  end
+  
+  returnCalibrate = pp.command(CALI_ID, cali_packet);
   
 catch exception
     getReport(exception)
@@ -79,5 +89,5 @@ end
 % Clear up memory upon termination
 pp.shutdown()
 
-
 toc
+clear
