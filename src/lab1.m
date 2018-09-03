@@ -10,6 +10,7 @@
 % 
 % IMPORTANT - understanding the code below requires being familiar
 % with the Nucleo firmware. Read that code first.
+
 clear java;
 %clear import;
 clear classes;
@@ -17,7 +18,7 @@ vid = hex2dec('3742');
 pid = hex2dec('0007');
 disp (vid );
 disp (pid);
-javaaddpath ../lib/SimplePacketComsJavaFat-0.5.2.jar;
+javaaddpath ../lib/SimplePacketComsJavaFat-0.6.2.jar;
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.device.*;
 import edu.wpi.SimplePacketComs.phy.*;
@@ -31,13 +32,13 @@ myHIDSimplePacketComs.connect();
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs); 
 try
-  SERV_ID = 37;            % we will be talking to server ID 37 on
+  SERV_ID = 01;            % we will be talking to server ID 37 on
                            % the Nucleo
 
   DEBUG   = true;          % enables/disables debug prints
 
   % Instantiate a packet - the following instruction allocates 64
-  % bytes for this purpose. Recall that the HID interface supports
+  % bytes for this purpose. Recall thite('Lab1test.csv', returnPacket','delimiter',' ','-append')at the HID interface supports
   % packet sizes up to 64 bytes.
   packet = zeros(15, 1, 'single');
 
@@ -58,8 +59,8 @@ try
 
       % Send packet to the server and get the response
       returnPacket = pp.command(SERV_ID, packet);
-      
-
+      dlmwrite('Lab1test.csv', returnPacket','delimiter',' ','-append');
+    
       if DEBUG
           disp('Sent Packet:');
           disp(packet);
@@ -70,6 +71,7 @@ try
       pause(1) %timeit(returnPacket) !FIXME why is this needed?
       
   end
+  
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');
