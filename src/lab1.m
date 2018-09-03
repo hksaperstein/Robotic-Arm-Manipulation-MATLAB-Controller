@@ -10,7 +10,7 @@
 % 
 % IMPORTANT - understanding the code below requires being familiar
 % with the Nucleo firmware. Read that code first.
-
+clear
 clear java;
 %clear import;
 clear classes;
@@ -31,9 +31,10 @@ myHIDSimplePacketComs.setVid(vid);
 myHIDSimplePacketComs.connect();
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs); 
+pp2 = PacketProcessor(myHIDSimplePacketComs); 
 try
   SERV_ID = 01;            % we will be talking to server ID 37 on
-  CALI_ID = 02;                       % the Nucleo
+  CALI_ID = 50;                       % the Nucleo
 
   DEBUG   = true;          % enables/disables debug prints
 
@@ -41,8 +42,8 @@ try
   % bytes for this purpose. Recall thite('Lab1test.csv', returnPacket','delimiter',' ','-append')at the HID interface supports
   % packet sizes up to 64 bytes.
   packet = zeros(15, 1, 'single');
-  cali_packet = zeros(4, 1, 'single');
-
+  cali_packet = zeros(15, 1, 'single');
+    pp.command(CALI_ID, cali_packet);
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
@@ -50,6 +51,7 @@ try
 
   
     fopen('Lab1test.csv', 'w');
+    fopen('Lab1Return.csv', 'w');
   % Iterate through a sine wave for joint values
   for k = viaPts
       tic
@@ -73,14 +75,21 @@ try
       pause(1) %timeit(returnPacket) !FIXME why is this needed?
       
   end
-  pp.shutdown()
-  pause(.2)
+  pause(.02)
   jointHome = calibrate('Lab1test.csv');
   for i = (1:3)
-      cali_packet(i) = jointHome(i);
+      cali_packet((i*3) -2) = jointHome(i);
   end
-  
-  returnCalibrate = pp.command(CALI_ID, cali_packet);
+  for i = (0:10)
+    returnCalibrate = pp.command(CALI_ID, cali_packet);
+    dlmwrite('Lab1Return.csv', returnCalibrate','delimiter',' ','-append');
+        if DEBUG
+             disp('Sent Packet:');
+             disp(cali_packet);
+             disp('Received Packet:');
+            disp(returnCalibrate);
+        end
+  end
   
 catch exception
     getReport(exception)
