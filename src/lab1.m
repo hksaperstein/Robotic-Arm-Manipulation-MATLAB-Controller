@@ -52,9 +52,13 @@ try
   
     fopen('Lab1test.csv', 'w');
     fopen('Lab1Return.csv', 'w');
+    fopen('jointPlot.csv', 'w');  % header
+
   % Iterate through a sine wave for joint values
+  i = 0;
+  tic
   for k = viaPts
-      tic
+  
       %incremtal = (single(k) / sinWaveInc);
 
       packet(1) = k;
@@ -64,6 +68,10 @@ try
       returnPacket = pp.command(SERV_ID, packet);
       
       dlmwrite('Lab1test.csv', returnPacket','delimiter',' ','-append');
+      start = tic;
+      elapsedTime = toc;
+      jointArrayGet = [returnPacket(1), returnPacket(4), returnPacket(7), elapsedTime];
+        dlmwrite('jointPlot.csv',jointArrayGet,'delimiter','\t','precision',['%10.',num2str(12),'f'],'-append');
     
       if DEBUG
           disp('Sent Packet:');
@@ -71,10 +79,19 @@ try
           disp('Received Packet:');
           disp(returnPacket);
       end
+      xRange = -3000:3000;
+      yRange = 0:10;
+      Array=dlmread('jointPlot.csv');
+        col1 = Array(:, 1);
+        col2 = Array(:, 2);
+        col3 = Array(:, 3);
+        col4 = Array(:, 4);
+        plot(col4, col1, col4, col2, col4, col3)
       toc
       pause(1) %timeit(returnPacket) !FIXME why is this needed?
-      
+      i= i +1;
   end
+
   pause(.02)
   jointHome = calibrate('Lab1test.csv');
   for i = (1:3)
