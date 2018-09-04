@@ -11,6 +11,7 @@
 % IMPORTANT - understanding the code below requires being familiar
 % with the Nucleo firmware. Read that code first.
 clear
+
 clear java;
 %clear import;
 clear classes;
@@ -18,13 +19,14 @@ vid = hex2dec('3742');
 pid = hex2dec('0007');
 disp (vid );
 disp (pid);
-javaaddpath ../lib/SimplePacketComsJavaFat-0.6.2.jar;
+
+javaaddpath ../lib/SimplePacketComsJavaFat-0.6.4.jar;
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.device.*;
 import edu.wpi.SimplePacketComs.phy.*;
 import java.util.*;
 import org.hid4java.*;
-version -java;
+version -java
 myHIDSimplePacketComs=HIDfactory.get();
 myHIDSimplePacketComs.setPid(pid);
 myHIDSimplePacketComs.setVid(vid);
@@ -60,33 +62,39 @@ try
   for k = viaPts
   
       %incremtal = (single(k) / sinWaveInc);
-
+      packet = zeros(15, 1, 'single');
       packet(1) = k;
 
-
+     
       % Send packet to the server and get the response
       returnPacket = pp.command(SERV_ID, packet);
-      
-      dlmwrite('Lab1test.csv', returnPacket','delimiter',' ','-append');
-      start = tic;
-      elapsedTime = toc;
-      jointArrayGet = [returnPacket(1), returnPacket(4), returnPacket(7), elapsedTime];
-        dlmwrite('jointPlot.csv',jointArrayGet,'delimiter','\t','precision',['%10.',num2str(12),'f'],'-append');
-    
+
+      toc
+
       if DEBUG
           disp('Sent Packet:');
           disp(packet);
           disp('Received Packet:');
           disp(returnPacket);
       end
-      xRange = -3000:3000;
-      yRange = 0:10;
-      Array=dlmread('jointPlot.csv');
-        col1 = Array(:, 1);
-        col2 = Array(:, 2);
-        col3 = Array(:, 3);
-        col4 = Array(:, 4);
-        plot(col4, col1, col4, col2, col4, col3)
+
+      
+      for x = 0:3
+          packet((x*3)+1)=0.1;
+          packet((x*3)+2)=0;
+          packet((x*3)+3)=0;
+      end
+      %THis version will send the command once per call of pp.write
+      pp.write(65, packet);
+      pause(0.003);
+      returnPacket2=  pp.read(65);
+      %this version will start an auto-polling server and read back the
+      %current data
+      %returnPacket2=  pp.command(65, packet);
+      if DEBUG
+          disp('Received Packet 2:');
+          disp(returnPacket2);
+      end
       toc
       pause(1) %timeit(returnPacket) !FIXME why is this needed?
       i= i +1;
