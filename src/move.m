@@ -18,7 +18,7 @@ vid = hex2dec('3742');
 pid = hex2dec('0007');
 disp (vid );
 disp (pid);
-javaaddpath ../lib/SimplePacketComsJavaFat-0.6.2.jar;
+javaaddpath ../lib/SimplePacketComsJavaFat-0.6.4.jar;
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.device.*;
 import edu.wpi.SimplePacketComs.phy.*;
@@ -35,7 +35,7 @@ try
     PID_ID = 37;            % we will be talking to server ID 37 on the Nucleo
     STATUS_ID = 01;
     CALIBRATE_ID = 50;
-    DEBUG   = true;          % enables/disables debug prints
+    DEBUG   = false;          % enables/disables debug prints
 
   % Instantiate a packet - the following instruction allocates 64
   % bytes for this purpose. Recall that the HID interface supports
@@ -46,14 +46,23 @@ try
     % sends initial packet of zeros through calibration server
     calibrate_packet = zeros(15, 1, 'single');
     pp.command(CALIBRATE_ID, calibrate_packet);
-    return_status_packet_matrix = pp.command(STATUS_ID, status_packet);
-    for i = (0:6)
+    returnMatrix = zeros(6,15);
+    tic
+    for i = (1:6)
         return_status_packet = pp.command(STATUS_ID, status_packet);
-        % FIXME MAke faster /initially allocate space
-        return_status_packet_matrix = [return_status_packet_matrix;
-                                         return_status_packet] 
+        returnMatrix(i,:) = return_status_packet;
+        if DEBUG
+          %disp('Sent Packet:');
+          disp(status_packet);
+          %disp('Received Packet:');
+          disp(return_status_packet);
+        end
+        toc;
+      pause(.1);
+        
     end
-    calibrate(return_status_packet_matrix);
+    returnMatrix
+    %calibrate(return_status_packet_matrix);
     
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
@@ -71,14 +80,16 @@ try
 
      
       % Send packet to the server and get the response
-      returnPacket = pp.command(PID_ID, packet);
+      pp.write(PID_ID, pid_packet);
+      pause(.003);
+      return_pid_packet = pp.read(PID_ID);
       
       
       if DEBUG
           disp('Sent Packet:');
-          disp(packet);
+          disp(pid_packet);
           disp('Received Packet:');
-          disp(returnPacket);
+          disp(return_pid_packet);
       end
       
       for x = 0:3
@@ -86,11 +97,11 @@ try
           packet((x*3)+2)=0;
           packet((x*3)+3)=0;
       end
-      pp.write(65, packet);
-      returnPacket2=  pp.read(65);
+     % pp.write(PID_ID, pid_packet);
+      %return_pid_packet=  pp.read(PID_ID);
       if DEBUG
-          disp('Received Packet 2:');
-          disp(returnPacket2);
+          %disp('Received Packet 2:');
+          %disp(return_pid_packet);
       end
       toc
       pause(1) %timeit(returnPacket) !FIXME why is this needed?

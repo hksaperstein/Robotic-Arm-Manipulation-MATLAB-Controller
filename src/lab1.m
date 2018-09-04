@@ -18,7 +18,7 @@ vid = hex2dec('3742');
 pid = hex2dec('0007');
 disp (vid );
 disp (pid);
-javaaddpath ../lib/SimplePacketComsJavaFat-0.6.2.jar;
+javaaddpath ../lib/SimplePacketComsJavaFat-0.6.4.jar;
 import edu.wpi.SimplePacketComs.*;
 import edu.wpi.SimplePacketComs.device.*;
 import edu.wpi.SimplePacketComs.phy.*;
@@ -31,7 +31,6 @@ myHIDSimplePacketComs.setVid(vid);
 myHIDSimplePacketComs.connect();
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs); 
-pp2 = PacketProcessor(myHIDSimplePacketComs); 
 try
   SERV_ID = 01;            % we will be talking to server ID 37 on
   CALI_ID = 50;                       % the Nucleo
@@ -43,7 +42,7 @@ try
   % packet sizes up to 64 bytes.
   packet = zeros(15, 1, 'single');
   cali_packet = zeros(15, 1, 'single');
-    pp.command(CALI_ID, cali_packet);
+  pp.command(CALI_ID, cali_packet);
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
@@ -51,60 +50,47 @@ try
 
   
     fopen('Lab1test.csv', 'w');
-    fopen('Lab1Return.csv', 'w');
-    fopen('jointPlot.csv', 'w');  % header
 
   % Iterate through a sine wave for joint values
-  i = 0;
+  
   tic
-  for k = viaPts
+  returnMatrix = zeros(6,15);
+  for i = (1:6)
   
       %incremtal = (single(k) / sinWaveInc);
 
-      packet(1) = k;
-
-
+      packet(1) = 1;
       % Send packet to the server and get the response
       returnPacket = pp.command(SERV_ID, packet);
       
-      dlmwrite('Lab1test.csv', returnPacket','delimiter',' ','-append');
-      start = tic;
-      elapsedTime = toc;
-      jointArrayGet = [returnPacket(1), returnPacket(4), returnPacket(7), elapsedTime];
-        dlmwrite('jointPlot.csv',jointArrayGet,'delimiter','\t','precision',['%10.',num2str(12),'f'],'-append');
+      returnMatrix(i,:) = returnPacket;
     
       if DEBUG
-          disp('Sent Packet:');
-          disp(packet);
-          disp('Received Packet:');
-          disp(returnPacket);
+         % disp('Sent Packet:');
+         % disp(packet);
+         % disp('Received Packet:');
+        %  disp(returnPacket);
       end
-      xRange = -3000:3000;
-      yRange = 0:10;
-      Array=dlmread('jointPlot.csv');
-        col1 = Array(:, 1);
-        col2 = Array(:, 2);
-        col3 = Array(:, 3);
-        col4 = Array(:, 4);
-        plot(col4, col1, col4, col2, col4, col3)
+ 
       toc
-      pause(1) %timeit(returnPacket) !FIXME why is this needed?
-      i= i +1;
+      pause(.2);
+      %timeit(returnPacket) !FIXME why is this needed?
   end
+  returnMatrix
 
-  pause(.02)
-  jointHome = calibrate('Lab1test.csv');
-  for i = (1:3)
-      cali_packet((i*3) -2) = jointHome(i);
-  end
+
+  jointHome = calibrate(returnMatrix)
+  %for i = (1:3)
+     % cali_packet((i*3) -2) = jointHome(i);
+  %end
   for i = (0:10)
     returnCalibrate = pp.command(CALI_ID, cali_packet);
     dlmwrite('Lab1Return.csv', returnCalibrate','delimiter',' ','-append');
         if DEBUG
-             disp('Sent Packet:');
-             disp(cali_packet);
-             disp('Received Packet:');
-            disp(returnCalibrate);
+            % disp('Sent Packet:');
+             %disp(cali_packet);
+            % disp('Received Packet:');
+            %disp(returnCalibrate);
         end
   end
   
