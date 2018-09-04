@@ -45,12 +45,17 @@ try
     
     % sends initial packet of zeros through calibration server
     calibrate_packet = zeros(15, 1, 'single');
-    pp.command(CALIBRATE_ID, calibrate_packet);
-    returnMatrix = zeros(6,15);
-    tic
+    pp.write(CALIBRATE_ID, calibrate_packet);
+    
+    return_calibrate_matrix = zeros(6,15);
+    
+    tic;
     for i = (1:6)
+        %pp.write(STATUS_ID, status_packet);
+        pause(.003)
         return_status_packet = pp.command(STATUS_ID, status_packet);
-        returnMatrix(i,:) = return_status_packet;
+        
+        return_calibrate_matrix(i,:) = return_status_packet;
         if DEBUG
           %disp('Sent Packet:');
           disp(status_packet);
@@ -58,31 +63,34 @@ try
           disp(return_status_packet);
         end
         toc;
-      pause(.1);
-        
+        pause(.2);
     end
-    returnMatrix
-    %calibrate(return_status_packet_matrix);
+    return_calibrate_matrix;
+    calibration_matrix = calibrate(return_calibrate_matrix)
+    
+    for i = 1:3
+        calibrate_packet((i*3)-2) = calibration_matrix(1,i);
+    end
+    pp.write(CALIBRATE_ID, calibrate_packet);
     
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
-  viaPts = [0, -400, 400, -400, 400, 0];
+  viaPts = [0, 1200, 0]
 
   
 
   % Iterate through a sine wave for joint values
   for k = viaPts
-      tic
+      tic;
       %incremtal = (single(k) / sinWaveInc);
-      packet = zeros(15, 1, 'single');
-      packet(1) = k;
+      pid_packet(1) = k;
+      pid_packet(4) = k;
+      pid_packet(7) = k;
 
      
       % Send packet to the server and get the response
-      pp.write(PID_ID, pid_packet);
-      pause(.003);
-      return_pid_packet = pp.read(PID_ID);
+      return_pid_packet = pp.command(PID_ID, pid_packet);
       
       
       if DEBUG
@@ -92,19 +100,14 @@ try
           disp(return_pid_packet);
       end
       
-      for x = 0:3
-          packet((x*3)+1)=0.1;
-          packet((x*3)+2)=0;
-          packet((x*3)+3)=0;
-      end
      % pp.write(PID_ID, pid_packet);
       %return_pid_packet=  pp.read(PID_ID);
       if DEBUG
           %disp('Received Packet 2:');
           %disp(return_pid_packet);
       end
-      toc
-      pause(1) %timeit(returnPacket) !FIXME why is this needed?
+      toc;
+      pause(1); %timeit(returnPacket) !FIXME why is this needed?
       
   end
 catch exception
@@ -113,5 +116,5 @@ catch exception
 end
 % Clear up memory upon termination
 pp.shutdown()
-toc
+toc;
 clear

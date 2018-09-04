@@ -1,6 +1,6 @@
 function offsets = calibrate(matrix)
     
-    [m,n] = size(matrix)
+    [m,n] = size(matrix);
     matrix = sum(matrix);
     
     
