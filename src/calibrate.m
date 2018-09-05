@@ -1,10 +1,10 @@
-function offsets = calibrate(file)
-    data = dlmread(file);
-    [m,n] = size(data)
-    data = sum(data);
+function offsets = calibrate(matrix)
+    
+    [m,n] = size(matrix);
+    matrix = sum(matrix);
     
     
-    offsets = data([1 4 7]);
+    offsets = matrix([1 4 7]);
     offsets = offsets/(m-1);
     return
 end
