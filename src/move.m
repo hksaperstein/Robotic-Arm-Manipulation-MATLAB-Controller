@@ -35,12 +35,14 @@ try
     PID_ID = 37;            % we will be talking to server ID 37 on the Nucleo
     STATUS_ID = 01;
     CALIBRATE_ID = 50;
+    PID_CONFIG_ID = 65;
     DEBUG   = false;          % enables/disables debug prints
 
   % Instantiate a packet - the following instruction allocates 64
   % bytes for this purpose. Recall that the HID interface supports
   % packet sizes up to 64 bytes.
     pid_packet = zeros(15, 1, 'single');
+    pid_config_packet = zeros(15, 1, 'single');
     status_packet = zeros(15, 1, 'single');
     
     % sends initial packet of zeros through calibration server
@@ -76,21 +78,57 @@ try
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
-  viaPts = [0, 1200, 0]
-
+  viaPts2 = [800, 400, 800, 400, 0]
+  viaPts1 = [0, -400, 400, -400, 0]
+  %viaPts1 = [0, 1200, 0]
+    p = .005;
+    i = .00;
+    d = .035;
+  pid_config_packet(1) = .0025; %joint1P
+  %pid_config_packet(2) = 0; %joint1I
+  pid_config_packet(3) = .025;  %joint1D
+  pid_config_packet(4) = .005;  %joint2P
+  %pid_config_packet(5) = i;  %joint2I
+   pid_config_packet(6) = .035; %joint2D
+  pid_config_packet(7) = .005; %joint3P
+  %pid_config_packet(8) = i; %joint3I
+  pid_config_packet(9) = .035; %joint3D
   
-
+  pp.write(PID_CONFIG_ID, pid_config_packet);
+  pause(.003);
+  return_pid_config_packet = pp.read(PID_CONFIG_ID);
+  disp(pid_config_packet);
+  disp(return_pid_config_packet);
   % Iterate through a sine wave for joint values
-  for k = viaPts
-      tic;
+  
+  hold on;
+  createfigure();
+  
+  j1 = animatedline('color', 'g');
+  j2 = animatedline('color', 'r');
+  j3 = animatedline('color', 'b');
+  tic
+  for k = (1:5)
+      
+      
+      
       %incremtal = (single(k) / sinWaveInc);
-      pid_packet(1) = k;
-      pid_packet(4) = k;
-      pid_packet(7) = k;
+      pid_packet(1) = viaPts1(k);
+      pid_packet(4) = viaPts2(k);
+      pid_packet(7) = viaPts2(k);
 
      
       % Send packet to the server and get the response
       return_pid_packet = pp.command(PID_ID, pid_packet);
+      y1 = double (return_pid_packet(1));
+      y2 = double (return_pid_packet(4));
+      y3 = double (return_pid_packet(7));
+      x = toc;
+      addpoints(j1,x,y1)
+      addpoints(j2,x,y2)
+      addpoints(j3,x,y3)
+      grid on;
+      drawnow
       
       
       if DEBUG
