@@ -32,6 +32,7 @@ myHIDSimplePacketComs.connect();
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs); 
 try
+    pose([1 1 1])
     PID_ID = 37;            % we will be talking to server ID 37 on the Nucleo
     STATUS_ID = 01;
     CALIBRATE_ID = 50;
