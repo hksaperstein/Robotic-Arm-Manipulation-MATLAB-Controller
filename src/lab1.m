@@ -52,13 +52,20 @@ try
   figure(1)
   hold on;
   
-  h = animatedline;
+  j1 = animatedline('color', 'g');
+  j2 = animatedline('color', 'r');
+  j3 = animatedline('color', 'b');
   tic
   for i = 1:100
       returnP = pp.command(SERV_ID, packet);
-      y = double (returnP(1));
-      x = toc
-      addpoints(h,x,y)
+      y1 = double (returnP(1));
+      y2 = double (returnP(4));
+      y3 = double (returnP(7));
+      x = toc;
+      addpoints(j1,x,y1)
+      addpoints(j2,x,y2)
+      addpoints(j3,x,y3)
+      grid on;
       drawnow
       pause(.1)
   end
