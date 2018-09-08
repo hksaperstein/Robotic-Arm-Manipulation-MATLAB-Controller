@@ -10,6 +10,7 @@
 % 
 % IMPORTANT - understanding the code below requires being familiar
 % with the Nucleo firmware. Read that code first.
+close all;
 clear
 clear java
 %clear import;
@@ -32,7 +33,7 @@ myHIDSimplePacketComs.connect();
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs); 
 try
-    pose([1 1 1])
+    pose([0 0 0])
     PID_ID = 37;            % we will be talking to server ID 37 on the Nucleo
     STATUS_ID = 01;
     CALIBRATE_ID = 50;
