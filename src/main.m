@@ -24,12 +24,12 @@ try
     packets;
     
   % Calibration of initial position of arm
-    calibration;
+    %calibration;
     
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
-  viaPts2 = [800, 400, 800, 400, 0];
+  viaPts2 = [400, 200, 400, 200, 0];
   viaPts1 = [0, -400, 400, -400, 0];
   %viaPts1 = [0, 1200, 0]
     p = .005;
@@ -38,9 +38,9 @@ try
   pid_config_packet(1) = .0025; %joint1P
   %pid_config_packet(2) = 0; %joint1I
   pid_config_packet(3) = .025;  %joint1D
-  pid_config_packet(4) = .005;  %joint2P
-  %pid_config_packet(5) = i;  %joint2I
-   pid_config_packet(6) = .035; %joint2D
+  pid_config_packet(4) = .0015;  %joint2P
+  pid_config_packet(5) = .001;  %joint2I
+   pid_config_packet(6) = .065; %joint2D
   pid_config_packet(7) = .005; %joint3P
   %pid_config_packet(8) = i; %joint3I
   pid_config_packet(9) = .035; %joint3D
@@ -51,43 +51,71 @@ try
   disp(pid_config_packet);
   disp(return_pid_config_packet);
   % Iterate through a sine wave for joint values
-  
-  hold on;
-  createfigure();
-  
-  j1 = animatedline('color', 'g');
-  j2 = animatedline('color', 'r');
-  j3 = animatedline('color', 'b');
+%   figure3 = figure;
+%   hold on;
+%   grid on;
+%   positionPlot = plot(0, 0, 0, 0, 0, 0);
+
+    figure1 = figure;
+    hold on;
+    grid on;
+    points = pose([0 0 0]);
+    R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'MarkerEdgeColor',[0 0 1],...
+    'Marker','o',...
+    'Color',[0 1 0]);
+    
+    hold on;
+    grid on;
+    view(3);
+    axis([-150 350 -250 250 -100 400]);
+    
   tic;
+  return_pid_packet = pp.command(PID_ID, pid_packet);
+  y1 = double (return_pid_packet(1));
+  y2 = double (return_pid_packet(4));
+  y3 = double (return_pid_packet(7));
+  points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
+  points = double (points)
+  path = animatedline(points(1,4),points(2,4), points(3,4));
+  x = 0;
   for k = (1:5)
       
-      
-      
-      %incremtal = (single(k) / sinWaveInc);
-      pid_packet(1) = viaPts1(k);
-      pid_packet(4) = viaPts2(k);
-      pid_packet(7) = viaPts2(k);
+      %while((y1(end) >= viaPts1(k)*1.05 || y1(end) <= viaPts1(k) *.95) && (y2(end) >= viaPts2(k) * 1.05 || y2(end) <= viaPts2(k) *.95) && (y3(end) >= viaPts2(k) * 1.05 || y3(end) <= viaPts2(k) *.95))
+      %while(toc < k*1.5)
+      while(1)
+          %incremtal = (single(k) / sinWaveInc);
+          pid_packet(1) = viaPts1(k);
+          pid_packet(4) = viaPts2(k);
+          pid_packet(7) = viaPts2(k);
+% % 
+% %      
+% %       % Send packet to the server and get the response
+        return_pid_packet = pp.command(PID_ID, pid_packet);
+% %       %y1 = [y1 (double (return_pid_packet(1)))];
+% %       y2 = [y2 (double (return_pid_packet(4)))];
+% %       %y3 = [y3 (double (return_pid_packet(7)))];
+% %       x = [x toc];
+% %       %set(positionPlot(1), 'xdata', x, 'ydata', y1);
+% %       set(positionPlot(2), 'xdata', x, 'ydata', y2);
+% %       %set(positionPlot(3), 'xdata', x, 'ydata', y3);
 
-     
-      % Send packet to the server and get the response
-      return_pid_packet = pp.command(PID_ID, pid_packet);
-      y1 = double (return_pid_packet(1));
-      y2 = double (return_pid_packet(4));
-      y3 = double (return_pid_packet(7));
-      x = toc;
-      addpoints(j1,x,y1);
-      addpoints(j2,x,y2);
-      addpoints(j3,x,y3);
-      grid on;
-      drawnow;
-      
-      
-      if DEBUG
-          disp('Sent Packet:');
-          disp(pid_packet);
-          disp('Received Packet:');
-          disp(return_pid_packet);
+        %status_return_packet = pp.command(STATUS_ID, status_packet);
+
+        points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)])
+        
+        set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
+        addpoints(path,double (points(1,4)), double (points(2,4)), double (points(3,4)));
+        drawnow();
+  
       end
+      
+      
+%       if DEBUG
+%         4  disp('Sent Packet:');
+%           disp(pid_packet);
+%           disp('Received Packet:');
+%           disp(return_pid_packet);
+%       end
       
      % pp.write(PID_ID, pid_packet);
       %return_pid_packet=  pp.read(PID_ID);

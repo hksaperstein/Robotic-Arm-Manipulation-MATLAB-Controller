@@ -2,4 +2,4 @@ PID_ID = 37;
 STATUS_ID = 01;
 CALIBRATE_ID = 50;
 PID_CONFIG_ID = 65;
-DEBUG = false;
+DEBUG = true;

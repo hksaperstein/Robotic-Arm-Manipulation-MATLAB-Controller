@@ -1,12 +1,4 @@
-%% live plot 3d arm
-close all;
-initScript
-constants;
-packets;
-pp = PacketProcessor(myHIDSimplePacketComs);
 
-try
-    calibration;
     figure1 = figure;
     hold on;
     grid on;
@@ -19,20 +11,11 @@ try
     grid on;
     view(3);
     axis([-150 350 -250 250 -100 400]);
-    while(1)
-        status_return_packet = pp.command(STATUS_ID, status_packet);
-        
-        points = pose([status_return_packet(1) status_return_packet(4) status_return_packet(7)]);
+    status_return_packet = pp.command(STATUS_ID, status_packet);
 
-        set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
-        drawnow();
+    points = pose([status_return_packet(1) status_return_packet(4) status_return_packet(7)]);
+
+    set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
+    drawnow();
         
         
-    end
-catch exception
-    getReport(exception)
-    disp('Exited on error, clean shutdown');
-end
-% Clear up memory upon termination
-pp.shutdown()
-clear
