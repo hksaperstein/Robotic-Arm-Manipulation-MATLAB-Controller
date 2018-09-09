@@ -6,12 +6,10 @@ packets;
 pp = PacketProcessor(myHIDSimplePacketComs);
 
 try
-    %calibration;
+    calibration;
     figure1 = figure;
     hold on;
     grid on;
-
-    calibration;
     points = pose([0 0 0]);
     R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'MarkerEdgeColor',[0 0 1],...
     'Marker','o',...
@@ -20,7 +18,7 @@ try
     hold on;
     grid on;
     view(3);
-    axis([-100 400 -250 250 -100 400]);
+    axis([-150 350 -250 250 -100 400]);
     while(1)
         status_return_packet = pp.command(STATUS_ID, status_packet);
         
@@ -29,6 +27,7 @@ try
         set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
         drawnow();
         
+        
     end
 catch exception
     getReport(exception)
@@ -36,5 +35,4 @@ catch exception
 end
 % Clear up memory upon termination
 pp.shutdown()
-toc;
 clear
