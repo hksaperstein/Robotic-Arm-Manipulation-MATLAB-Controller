@@ -11,7 +11,7 @@ alpha3 = pi;
 alpha4 = pi/2;
 
 %conversion = pi / 2048; %degrees / ticks
-q = q * 360/4096
+q = q * 360/4096;
 q = q * pi/180;
 
 dh1 = dhTransform(L1, 0, -q(1), alpha1);
