@@ -14,7 +14,7 @@ initScript;
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs);
 constants;
-
+fopen('jointData.csv', 'w');
 try
     pose([0 0 0]);
 
@@ -29,8 +29,13 @@ try
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
-  viaPts2 = [400, 200, 400, 200, 0];
-  viaPts1 = [0, -400, 400, -400, 0];
+  %viaPts1 = [0, -400, 400, -400, 0];
+  %viaPts2 = [400, 200, 400, 200, 0];
+  
+  trianglePtsx = [0, 200, 0, -200, 200, 0];
+  trianglePtsy = [0, 0, 0, 0, 0, 0];
+  trianglePtsz = [0, 400, 1000, 400, 400,0];
+ 
   %viaPts1 = [0, 1200, 0]
     p = .005;
     i = .00;
@@ -75,18 +80,23 @@ try
   y2 = double (return_pid_packet(4));
   y3 = double (return_pid_packet(7));
   points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
-  points = double (points)
+  points = double (points);
   path = animatedline(points(1,4),points(2,4), points(3,4));
   x = 0;
-  for k = (1:5)
+  for k = (1:6)
       
       %while((y1(end) >= viaPts1(k)*1.05 || y1(end) <= viaPts1(k) *.95) && (y2(end) >= viaPts2(k) * 1.05 || y2(end) <= viaPts2(k) *.95) && (y3(end) >= viaPts2(k) * 1.05 || y3(end) <= viaPts2(k) *.95))
-      %while(toc < k*1.5)
-      while(1)
-          %incremtal = (single(k) / sinWaveInc);
-          pid_packet(1) = viaPts1(k);
-          pid_packet(4) = viaPts2(k);
-          pid_packet(7) = viaPts2(k);
+      while(toc < k * 1.5)
+      %while(1)
+          %setpoints
+%           pid_packet(1) = viaPts1(k);
+%           pid_packet(4) = viaPts2(k);
+%           pid_packet(7) = viaPts2(k);
+
+          % triangle setpoints
+          pid_packet(1) = trianglePtsy(k);
+          pid_packet(4) = trianglePtsz(k);
+          pid_packet(7) = trianglePtsx(k);
 % % 
 % %      
 % %       % Send packet to the server and get the response
@@ -98,16 +108,18 @@ try
 % %       %set(positionPlot(1), 'xdata', x, 'ydata', y1);
 % %       set(positionPlot(2), 'xdata', x, 'ydata', y2);
 % %       %set(positionPlot(3), 'xdata', x, 'ydata', y3);
-
         %status_return_packet = pp.command(STATUS_ID, status_packet);
 
-        points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)])
-        
+        points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
+                dlmwrite('jointData.csv', [return_pid_packet(1) return_pid_packet(4) return_pid_packet(7) points(1,4) points(3,4) toc], 'delimiter',',','-append');
+
         set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
         addpoints(path,double (points(1,4)), double (points(2,4)), double (points(3,4)));
         drawnow();
   
       end
+      %csvread('jointData.csv',:, 1)
+      
       
       
 %       if DEBUG
@@ -127,6 +139,7 @@ try
       pause(1); %timeit(returnPacket) !FIXME why is this needed?
       
   end
+  csvPlot('jointData.csv');
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');
