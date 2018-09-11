@@ -12,10 +12,10 @@ for i = (1:11)
 end
 
 return_calibrate_matrix;
-calibration_matrix = calibrate(return_calibrate_matrix)
+calibration_matrix = calibrate(return_calibrate_matrix);
 
 calibrate_packet(1) = calibration_matrix(1);
 calibrate_packet(4) = calibration_matrix(2);
 calibrate_packet(7) = calibration_matrix(3);
 
-%pp.write(CALIBRATE_ID, calibrate_packet);
+pp.write(CALIBRATE_ID, calibrate_packet);
