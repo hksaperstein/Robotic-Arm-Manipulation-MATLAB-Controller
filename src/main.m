@@ -119,6 +119,7 @@ try
             set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
             addpoints(path,double (points(1,4)), double (points(2,4)), double (points(3,4)));
             drawnow();
+            pause(.5);
             
           end
         start1x = trianglePtsx(k+1);

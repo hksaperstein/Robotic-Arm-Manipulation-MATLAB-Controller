@@ -11,7 +11,7 @@ function [plotCSV] = csvPlot( fileName )
     joint1Vel = diff(joint1Ang);
     joint2Vel = diff(joint2Ang);
     joint3Vel = diff(joint3Ang);
-    figure(2)
+    figure(3)
     hold on;
     subplot(3, 1, 1)
     plot(time, joint1Ang, time, joint2Ang, time, joint3Ang);
