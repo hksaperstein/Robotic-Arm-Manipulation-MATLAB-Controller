@@ -20,7 +20,7 @@ l4 = sqrt((px^2)+(py^2)+((pz-l1)^2));
         beta = acos(((l2^2)+(l4^2)-(l3^2))/(2*l2*l4));    
         theta1 = atan2(py,px);
         theta2 = (alpha + beta);
-        theta3 = (pi - acos(((l2^2)+(l3^2)-(l4^2))/(2*l2*l3)));
+        theta3 = (-pi/2 + acos(((l2^2)+(l3^2)-(l4^2))/(2*l2*l3)));
         angles = [theta1, theta2, theta3] * (180/pi) * (4096/360);
     end
 
