@@ -2,7 +2,8 @@
 figure1 = figure;
 hold on;
 grid on;
-axis([-150 350 -250 250 -100 400]);
+view(3);
+axis([-0 400 -400 400 -50 450]);
 points = pose([0 0 0]);
 xlabel({'X Position (mm)'});
 zlabel({'Z Position (mm)'});
@@ -13,25 +14,24 @@ R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'
                     'Color',[0 1 0]);
 
 
-pos1 = ikin([175,0,-34.28])
-pos2 = ikin([0,-344.28,135])
+pos1 = ikin([175,0,-34.28]);
+pos2 = ikin([0,-344.28,135]);
+position = [pos2(1,:); pos1(1,:)];
+startTime = tic;
+time = 0;
+for i = 1:2
+    while(time < i)
+        pos = position(i,:);
+        pid_packet(1) = pos(1);
+        pid_packet(4) = pos(2);
+        pid_packet(7) = pos(3);
+        return_pid_packet = pidCom(pp, PID_ID, pid_packet);
 
-pid_packet(1) = pos2(1);
-pid_packet(3504) = pos2(2);
-pp.write(PID_ID, pid_packet);
-pid_packet(7) = pos2(3);
-pp.write(PID_ID, pid_packet);
-
-points = pose([pid_packet(1) pid_packet(4) pid_packet(7)]);
-set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
-drawnow();
-pause(5);
-pid_packet(1) = pos1(1);
-pid_packet(4) = pos1(2);
-pp.write(PID_ID, pid_packet);
-pid_packet(7) = pos1(3);
-pp.write(PID_ID, pid_packet);
-
-points = pose([pid_packet(1) pid_packet(4) pid_packet(7)]);
-set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
-drawnow();
+        points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
+        time = toc(startTime);
+        dlmwrite('csv/jointxyzData.csv', [return_pid_packet(1) return_pid_packet(4) return_pid_packet(7) points(1, 4) points(3, 4) points(2, 4) time], 'delimiter',',','-append');
+        set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
+        drawnow();
+    end
+end
+csvPlot('csv/jointxyzData.csv');

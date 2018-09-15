@@ -18,12 +18,12 @@ try
     view(3);
     axis([-150 350 -250 250 -100 400]);
     while(1)
-    status_return_packet = pp.command(STATUS_ID, status_packet);
+        status_return_packet = pp.command(STATUS_ID, status_packet);
 
-    points = pose([status_return_packet(1) status_return_packet(4) status_return_packet(7)]);
+        points = pose([status_return_packet(1) status_return_packet(4) status_return_packet(7)]);
 
-    set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
-    drawnow();
+        set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
+        drawnow();
     end
         
 catch exception

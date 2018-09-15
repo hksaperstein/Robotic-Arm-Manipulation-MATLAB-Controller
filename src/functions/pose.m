@@ -10,12 +10,11 @@ alpha2 = 0;
 alpha3 = 0;
 
 %conversion = pi / 2048; %degrees / ticks
-q = q * 360/4096;
-q = q * pi/180;
+%q = q * 360/4096;
                     %d, a, theta, alpha
 dh1 = dhTransform(L1, 0, -q(1), alpha1);
 dh2 = dhTransform(0, L2, q(2), alpha2);
-dh3 = dhTransform(0, L3, q(3)-pi/2, alpha3);
+dh3 = dhTransform(0, L3, q(3)-90, alpha3);
 
 dh01 = dh1;
 dh02 = dh1*dh2;

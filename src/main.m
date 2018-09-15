@@ -14,7 +14,8 @@ initScript;
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs);
 constants;
-fopen('jointData.csv', 'w');
+fopen('csv/jointData.csv', 'w');
+fopen('csv/jointxyzData.csv', 'w');
 try
     pose([0 0 0]);
 
@@ -59,9 +60,7 @@ try
     y1 = double (return_pid_packet(1));
     y2 = double (return_pid_packet(4));
     y3 = double (return_pid_packet(7));
-  while(1)
-      liveSketch
-  end
+ 
   %Animated Live Plot
 %   points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
 %   points = double (points);
@@ -116,7 +115,8 @@ try
 %         start1y= trianglePtsy(k+1);
 %         start1z = trianglePtsz(k+1);
 % 
-%   end initialSample = tic;
+%   end 
+%   initialSample = tic;
 %  csvPlot('jointData.csv');
 %% Timestamp Calc Part 1
 
