@@ -4,7 +4,7 @@ return_calibrate_matrix = zeros(11,15);
 
 for i = (1:11)
 
-    return_status_packet = getStatus(pp, STATUS_ID, status_packet);
+    return_status_packet = pp.command(STATUS_ID, status_packet);
 
     return_calibrate_matrix(i,:) = return_status_packet;
 
@@ -15,6 +15,9 @@ return_calibrate_matrix;
 calibration_matrix = calibrate(return_calibrate_matrix);
 
 conversionFactor = 4096/360;
+packet(1) = packet(1);
+packet(4) = packet(4) * conversionFactor;
+packet(7) = packet(7) * conversionFactor;
 
 calibrate_packet(1) = calibration_matrix(1) * conversionFactor;
 calibrate_packet(4) = calibration_matrix(2) * conversionFactor;

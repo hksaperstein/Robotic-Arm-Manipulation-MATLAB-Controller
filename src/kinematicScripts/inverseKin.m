@@ -1,7 +1,7 @@
 %% inverse kinematics
 
-pos1 = ikin([175,0,-34.28]);
-pos2 = ikin([0,0,479.28]);
+pos1 = ikin([175,0,-34.28])
+pos2 = ikin([0,0,479.28])
 
 pid_packet(1) = pos2(1);
 pid_packet(4) = pos2(2);

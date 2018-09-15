@@ -27,7 +27,7 @@ try
   %% initiation of server packets, calibration of arm, PID configuration
     packets;
     calibration;
-    pidConfiguration
+    pidConfiguration;
     
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
@@ -134,16 +134,7 @@ try
 %   arrayMin = min(array)
 
 %% Inverse Kinematics Setpoints
-pos1 = ikin([175,0,-34.28]);
-pos2 = ikin([0,0,479.28])
-
-  pid_packet(1) = pos2(1);
-  pid_packet(4) = pos2(2);
-  pp.write(PID_ID, pid_packet);
-  pause(5);
-  pid_packet(7) = pos2(3);
-  pp.write(PID_ID, pid_packet);
-
+inverseKin
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');
