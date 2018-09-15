@@ -36,18 +36,18 @@ try
   %viaPts2 = [400, 200, 400, 200, 0];
   
   % Iterate through a sine wave for joint values/Live Plotting
-%   figure3 = figure;
+%    figure3 = figure;
 %   hold on;
-%   grid on;
+%    grid on;
 %    positionPlot = plot(0, 0, 0, 0, 0, 0);
-
-%     figure1 = figure;
-%     hold on;
+% 
+%      figure1 = figure;
+%      hold on;
 %     grid on;
-%     points = pose([0 0 0]);
-%     R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'MarkerEdgeColor',[0 0 1],...
-%     'Marker','o',...
-%     'Color',[0 1 0]);
+%      points = pose([0 0 0]);
+%      R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'MarkerEdgeColor',[0 0 1],...
+%      'Marker','o',...
+%      'Color',[0 1 0]);
 %     
 %     hold on;
 %     grid on;
@@ -59,7 +59,9 @@ try
     y1 = double (return_pid_packet(1));
     y2 = double (return_pid_packet(4));
     y3 = double (return_pid_packet(7));
-  
+  while(1)
+      liveSketch
+  end
   %Animated Live Plot
 %   points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
 %   points = double (points);
@@ -125,7 +127,7 @@ try
 %        return_status_packet = pp.command(STATUS_ID, status_packet);
 %        stamp =  toc(initialSample);
 %        dlmwrite('TimestampData.csv', stamp, 'delimiter', ',', '-append');
-%   end
+%   endeturn_
 %   array= csvread('TimestampData.csv');
 %   histogram(array);
 %   arraySTD = std(array)
