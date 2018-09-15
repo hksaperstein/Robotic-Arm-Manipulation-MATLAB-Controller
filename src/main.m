@@ -21,37 +21,19 @@ try
   % Instantiate a packet - the following instruction allocates 64
   % bytes for this purpose. Recall that the HID interface supports
   % packet sizes up to 64 bytes.
-    packets;
+    
     
   % Calibration of initial position of arm
-   calibration;
+  %% initiation of server packets, calibration of arm, PID configuration
+    packets;
+    calibration;
+    pidConfiguration
     
   % The following code generates a sinusoidal trajectory to be
   % executed on joint 1 of the arm and iteratively sends the list of
   % setpoints to the Nucleo firmware. 
   %viaPts1 = [0, -400, 400, -400, 0];
   %viaPts2 = [400, 200, 400, 200, 0];
- 
- 
-  %viaPts1 = [0, 1200, 0]
-    p = .005;
-    i = .00;
-    d = .035;
-  pid_config_packet(1) = .0025; %joint1P
-  %pid_config_packet(2) = 0; %joint1I
-  pid_config_packet(3) = .025;  %joint1D
-  pid_config_packet(4) = .0015;  %joint2P
-  pid_config_packet(5) = .001;  %joint2I
-   pid_config_packet(6) = .065; %joint2D
-  pid_config_packet(7) = .005; %joint3P
-  %pid_config_packet(8) = i; %joint3I
-  pid_config_packet(9) = .035; %joint3D
-  
-  pp.write(PID_CONFIG_ID, pid_config_packet);
-  pause(.003);
-  return_pid_config_packet = pp.read(PID_CONFIG_ID);
-  disp(pid_config_packet);
-  disp(return_pid_config_packet);
   
   % Iterate through a sine wave for joint values/Live Plotting
 %   figure3 = figure;
@@ -71,26 +53,26 @@ try
 %     grid on;
 %     view(3);
 %     axis([-150 350 -250 250 -100 400]);
-    
-  tic;
-  return_pid_packet = pp.command(PID_ID, pid_packet);
-  y1 = double (return_pid_packet(1));
-  y2 = double (return_pid_packet(4));
-  y3 = double (return_pid_packet(7));
+
+    tic;
+    return_pid_packet = pp.command(PID_ID, pid_packet);
+    y1 = double (return_pid_packet(1));
+    y2 = double (return_pid_packet(4));
+    y3 = double (return_pid_packet(7));
   
   %Animated Live Plot
 %   points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
 %   points = double (points);
 %   path = animatedline(points(1,4),points(2,4), points(3,4));
 
-  x = 0;
-  trianglePtsx = [0, 200, 0, -200, 200, 0,0];
-  trianglePtsy = [0, 0, 0, 0, 0, 0,0];
-  trianglePtsz = [0, 400, 1000, 400, 400,0,0];
-  start1x = trianglePtsx(1);
-  start1y= trianglePtsy(1);
-  start1z = trianglePtsz(1);
-  totalTime = 30;
+    x = 0;
+    trianglePtsx = [0, 200, 0, -200, 200, 0,0];
+    trianglePtsy = [0, 0, 0, 0, 0, 0,0];
+    trianglePtsz = [0, 400, 1000, 400, 400,0,0];
+    start1x = trianglePtsx(1);
+    start1y= trianglePtsy(1);
+    start1z = trianglePtsz(1);
+    totalTime = 30;
   
   %Time for graph tics
 %   graphTime = tic;
