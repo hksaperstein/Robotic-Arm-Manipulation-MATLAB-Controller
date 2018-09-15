@@ -135,6 +135,7 @@ try
 
 %% Inverse Kinematics Setpoints
 inverseKin
+
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');
