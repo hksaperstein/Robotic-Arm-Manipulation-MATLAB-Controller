@@ -17,64 +17,26 @@ constants;
 fopen('csv/jointData.csv', 'w');
 fopen('csv/jointxyzData.csv', 'w');
 try
-    pose([0 0 0]);
-
-  % Instantiate a packet - the following instruction allocates 64
-  % bytes for this purpose. Recall that the HID interface supports
-  % packet sizes up to 64 bytes.
-    
-    
-  % Calibration of initial position of arm
-  %% initiation of server packets, calibration of arm, PID configuration
+    %% initiation of server packets, calibration of arm, PID configuration
     packets;
     calibration;
     pidConfiguration;
-    
-  % The following code generates a sinusoidal trajectory to be
-  % executed on joint 1 of the arm and iteratively sends the list of
-  % setpoints to the Nucleo firmware. 
-  %viaPts1 = [0, -400, 400, -400, 0];
-  %viaPts2 = [400, 200, 400, 200, 0];
-  
-  % Iterate through a sine wave for joint values/Live Plotting
-%    figure3 = figure;
-%   hold on;
-%    grid on;
-%    positionPlot = plot(0, 0, 0, 0, 0, 0);
 % 
-%      figure1 = figure;
-%      hold on;
-%     grid on;
-%      points = pose([0 0 0]);
-%      R.handle = plot3(points(1,:),points(2,:),points(3,:),'MarkerFaceColor',[1 0 0],'MarkerEdgeColor',[0 0 1],...
-%      'Marker','o',...
-%      'Color',[0 1 0]);
-%     
-%     hold on;
-%     grid on;
-%     view(3);
-%     axis([-150 350 -250 250 -100 400]);
-
-    tic;
-    return_pid_packet = pp.command(PID_ID, pid_packet);
-    y1 = double (return_pid_packet(1));
-    y2 = double (return_pid_packet(4));
-    y3 = double (return_pid_packet(7));
- 
-  %Animated Live Plot
-%   points = pose([return_pid_packet(1) return_pid_packet(4) return_pid_packet(7)]);
-%   points = double (points);
-%   path = animatedline(points(1,4),points(2,4), points(3,4));
-
-    x = 0;
-    trianglePtsx = [0, 200, 0, -200, 200, 0,0];
-    trianglePtsy = [0, 0, 0, 0, 0, 0,0];
-    trianglePtsz = [0, 400, 1000, 400, 400,0,0];
-    start1x = trianglePtsx(1);
-    start1y= trianglePtsy(1);
-    start1z = trianglePtsz(1);
-    totalTime = 30;
-  
+%     tic;
+%     return_pid_packet = pp.command(PID_ID, pid_packet);
+%     y1 = double (return_pid_packet(1));
+%     y2 = double (return_pid_packet(4));
+%     y3 = double (return_pid_packet(7));
+%  
+%     x = 0;
+%     trianglePtsx = [0, 200, 0, -200, 200, 0,0];
+%     trianglePtsy = [0, 0, 0, 0, 0, 0,0];
+%     trianglePtsz = [0, 400, 1000, 400, 400,0,0];
+%     start1x = trianglePtsx(1);
+%     start1y= trianglePtsy(1);
+%     start1z = trianglePtsz(1);
+%     totalTime = 30;
+%   
   %Time for graph tics
 %   graphTime = tic;
  %%
@@ -119,25 +81,13 @@ try
 %   initialSample = tic;
 %  csvPlot('jointData.csv');
 %% Timestamp Calc Part 1
+    %timeStamp
 
-
-% fopen('TimestampData.csv','w');
-%   for i = (1:500)
-%        initialSample = tic;
-%        return_status_packet = pp.command(STATUS_ID, status_packet);
-%        stamp =  toc(initialSample);
-%        dlmwrite('TimestampData.csv', stamp, 'delimiter', ',', '-append');
-%   endeturn_
-%   array= csvread('TimestampData.csv');
-%   histogram(array);
-%   arraySTD = std(array)
-%   arrayAvg = mean(array)
-%   arrayMax = max(array)
-%   arrayMin = min(array)
 
 %% Inverse Kinematics Setpoints
-inverseKin
-
+    %inverseKin
+%% Quintic Trajectory
+    quinticTrajectoryScript
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');

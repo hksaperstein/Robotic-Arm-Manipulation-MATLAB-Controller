@@ -18,7 +18,7 @@ try
     view(3);
     axis([-150 350 -250 250 -100 400]);
     while(1)
-        status_return_packet = pp.command(STATUS_ID, status_packet);
+        status_return_packet = getStatus(pp, STATUS_ID, status_packet);
 
         points = pose([status_return_packet(1) status_return_packet(4) status_return_packet(7)]);
 

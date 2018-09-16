@@ -1,5 +1,5 @@
 %% return packet with angles in degrees
-function [packet] = getStatus(pp,ID, status_packet)
+function [packet] = getStatus(pp, ID, status_packet)
     packet = pp.command(ID, status_packet);
     
     conversionFactor = 360/4096;
