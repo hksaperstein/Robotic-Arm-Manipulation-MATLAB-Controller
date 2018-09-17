@@ -14,15 +14,15 @@ initScript;
 % Create a PacketProcessor object to send data to the nucleo firmware
 pp = PacketProcessor(myHIDSimplePacketComs);
 constants;
-fopen('csv/jointData.csv', 'w');
-fopen('csv/jointxyzData.csv', 'w');
+fopen('jointData.csv', 'w');
+fopen('jointxyzData.csv', 'w');
 try
     %% initiation of server packets, calibration of arm, PID configuration
     packets;
     calibration;
     pidConfiguration;
 % 
-%     tic;
+     tic;
 %     return_pid_packet = pp.command(PID_ID, pid_packet);
 %     y1 = double (return_pid_packet(1));
 %     y2 = double (return_pid_packet(4));
