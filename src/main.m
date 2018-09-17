@@ -87,7 +87,7 @@ try
 %% Inverse Kinematics Setpoints
     %inverseKin
 %% Quintic Trajectory
-    quinticTrajectoryScript
+    shapeTrajectoryScript
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');

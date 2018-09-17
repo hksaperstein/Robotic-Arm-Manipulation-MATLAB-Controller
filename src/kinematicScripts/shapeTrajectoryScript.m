@@ -22,16 +22,16 @@ points = pose([0 0 0]);
 points = double (points);
 path = animatedline(points(1,4),points(2,4), points(3,4), 'MarkerFaceColor',[.110 .009 .118], 'MarkerEdgeColor', [1 1 1], 'Marker', 'o');
 
-coordPos = [[175 0 -34.28]; [147 120 215]; [194 -147 20]; [135 67 -13]; [147 120 215]; [175 0 -34.28]];
+coordPos = [[175 0 -34.28]; [175 0 50]; [90 115 250]; [133 0 350]; [175 0 250]; [218 0 325]; [265 75 250]; [175 0 50]; [175 0 -34.28]];
 startTime = tic;
 start1x = coordPos(1, 1);
 start1y = coordPos(1, 2);
 start1z = coordPos(1, 3);
 
-totalTime = [1.5 3 2.5 3 3.5];
-totalSteps = [15 30 25 30 35];
+totalTime = [1.5 3 2.5 2 2.5 3 3 1.5];
+totalSteps = [15 30 25 20 25 30 30 15];
 graphTime = tic;
-for k = 1:5
+for k = 1:8
     timer = tic;
     pos = zeros(totalSteps(k), 3);
     constantValuesX = quinticPoly(start1x, coordPos(k+1, 1), 0, totalTime(k), 0, 0, 0, 0);
