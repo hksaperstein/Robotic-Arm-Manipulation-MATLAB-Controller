@@ -1,11 +1,11 @@
 function offsets = calibrate(matrix)
     
-    [m,n] = size(matrix);
+    [r, c] = size(matrix);
     matrix = sum(matrix);
     
     
     offsets = matrix([1 4 7]);
-    offsets = offsets/(m-1);
+    offsets = offsets/(r - 1);
     return
 end
     
