@@ -29,7 +29,7 @@ start1y = coordPos(1, 2);
 start1z = coordPos(1, 3);
 
 totalTime = [1.5 3 2.5 2 2.5 3 3 1.5];
-totalSteps = [15 30 25 20 25 30 30 15];
+totalSteps = [30 30 30 30 30 30 30 30];
 graphTime = tic;
 for k = 1:8
     timer = tic;

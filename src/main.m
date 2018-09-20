@@ -21,8 +21,16 @@ try
     packets;
     calibration;
     pidConfiguration;
+    
+    pause(15);
+    returnp = getStatus(pp, STATUS_ID, status_packet);
+    
+    mat = jacob0([returnp(1) returnp(4) returnp(7)])
+    mat(1:3,1:3)
+    det(mat(1:3,1:3))
+    
 % 
-     tic;
+    % tic;
 %     return_pid_packet = pp.command(PID_ID, pid_packet);
 %     y1 = double (return_pid_packet(1));
 %     y2 = double (return_pid_packet(4));
@@ -87,12 +95,12 @@ try
 %% Inverse Kinematics Setpoints
     %inverseKin
 %% Quintic Trajectory
-    shapeTrajectoryScript
+    %quinticTrajectoryScript
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');
 end
 % Clear up memory upon termination
 pp.shutdown()
-toc;
+%toc;
 clear
