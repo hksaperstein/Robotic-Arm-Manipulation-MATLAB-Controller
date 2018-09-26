@@ -3,7 +3,7 @@ px = position(1);
 py = position(2);
 pz = position(3);
 
-sym (pi);
+% sym (pi);
 
 l1 = 135;
 l2 = 175;
@@ -16,6 +16,7 @@ l4 = sqrt((px^2)+(py^2)+((pz-l1)^2));
         theta2 = (alpha + beta);
         theta3 = (-pi/2 + acos(((l2^2)+(l3^2)-(l4^2))/(2*l2*l3)));
         angles = [theta1, theta2, theta3] * (180/pi);
+       
         
   if (theta1 > 90 || theta1 < -90)
       theta1

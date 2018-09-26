@@ -8,9 +8,6 @@ L3 = 169.28;
 alpha1 = 90;
 alpha2 = 0;
 alpha3 = 0;
-
-%conversion = pi / 2048; %degrees / ticks
-%q = q * 360/4096;
                     %d, a, theta, alpha
 dh1 = dhTransform(L1, 0, -q(1), alpha1);
 dh2 = dhTransform(0, L2, q(2), alpha2);
