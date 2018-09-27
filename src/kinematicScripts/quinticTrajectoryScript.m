@@ -17,9 +17,6 @@ pos1 = ikin([147 120 215]);
 pos2 = ikin([194 -147 20]);
 pos3 = ikin([135 67 -13]);
 
-
-points = pose([0 0 0]);
-points = double (points);
 path = animatedline(points(1,4),points(2,4), points(3,4), 'MarkerFaceColor',[.110 .009 .118], 'MarkerEdgeColor', [1 1 1], 'Marker', 'o');
 
 coordPos = [[175 0 -34.28]; [147 120 215]; [194 -147 20]; [135 67 -13]; [147 120 215]; [175 0 -34.28]];
