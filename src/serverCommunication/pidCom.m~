@@ -24,8 +24,8 @@ function [return_packet] = pidCom(pp, ID, packet)
     k = 178.5;
 
     return_packet(3) = (return_packet(3) - joint1TOffset) / k;
-    return_packet(6) = (return_packet(6) - joint2TOffset) / k;
-    return_packet(9) = (return_packet(9) - joint3TOffset) / k;
+    return_packet(9) = (return_packet(6) - joint1TOffset) / k;
+    return_packet(6) = (return_packet(9) - joint1TOffset) / k;
 
 %forceConversion = 
 return

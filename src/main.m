@@ -17,10 +17,15 @@ constants;
 fopen('csv/angularVel.csv', 'w');
 try
     %% initiation of server packets, calibration of arm, PID configuration
-    packets;
+    packets; 
     calibration;
     pidConfiguration;
+     while(1)
+         return_status_packet = getStatus(pp, STATUS_ID, status_packet)
+    end
     disp("Calibration finished");
+    
+    
     
 %% Forward Velocity Kinematics
     %forwardVelocityScript
