@@ -8,6 +8,7 @@
 % communication between this script and the Nucleo firmware, send
 % setpoint commands and receive sensor data.
 % 
+
 % IMPORTANT - understanding the code below requires being familiar
 % with the Nucleo firmware. Read that code first.
 initScript;
@@ -21,9 +22,15 @@ try
     calibration;
     pidConfiguration;
      while(1)
-         return_status_packet = getStatus(pp, STATUS_ID, status_packet)
-    end
-    disp("Calibration finished");
+         return_status_packet = statusCom(pp, STATUS_ID, status_packet);
+         jacobian = jacob0([return_status_packet(1) return_status_packet(4) return_status_packet(7)]);
+         torqueJ1 = return_status_packet(3);
+         torqueJ2 = return_status_packet(6);
+         torqueJ3 = return_status_packet(9);
+         torques = [torqueJ1 torqueJ2 torqueJ3];
+         inverseForce(torques, jacobian(1:3,1:3))
+         
+     end
     
     
     
