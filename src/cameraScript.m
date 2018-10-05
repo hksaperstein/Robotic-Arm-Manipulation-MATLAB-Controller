@@ -12,4 +12,4 @@ imshow(imgFinalClr)
 
 
 s = regionprops(imgFinalBW, 'centroid')
-mn2xy(127, 169);
+mn2xy(s.Centroid(1), s.Centroid(2));

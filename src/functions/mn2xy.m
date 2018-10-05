@@ -7,8 +7,8 @@
 % run the provided "calibrate_camera.m" function prior to its use.
 function [ outarr ] = mn2xy( m,n )
 %% define calibration distance constants
-tot_width_in_cm = (25);
-tot_height_in_cm = (18);
+tot_width_in_cm = (27.5);
+tot_height_in_cm = (20);
 
 %% read in data from xml
 xml = xmlread('calibrations/pixels.xml');

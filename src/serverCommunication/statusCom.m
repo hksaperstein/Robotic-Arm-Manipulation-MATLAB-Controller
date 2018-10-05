@@ -12,21 +12,11 @@
 
     joint1TOffset = 1966.0;
     joint2TOffset =  2072.6;
-<<<<<<< HEAD
     joint3TOffset =  1901.2;
-=======
-    joint3TOffset =  1685.21;
->>>>>>> 613970b3e9f3fca1d2ca17527d6f4f82a1efc5d0
     k1 = 170.28;
     k2 = 155;
     k3 = 40;
     packet(3) = ((packet(3) - joint1TOffset) / k1);
-<<<<<<< HEAD
-    packet(6) = ((packet(6) - joint2TOffset) / k2);
-    packet(9) = ((packet(9) - joint3TOffset) / k3);
- return
-=======
     packet(6) = -((packet(6) - joint2TOffset) / k2);
     packet(9) = -((packet(9) - joint3TOffset) / k3);
  return
->>>>>>> 613970b3e9f3fca1d2ca17527d6f4f82a1efc5d0
