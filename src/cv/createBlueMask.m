@@ -43,6 +43,15 @@ decomposition = 4;
 se = strel('disk', radius, decomposition);
 BW = imopen(BW, se);
 
+% Dilate mask with disk
+radius = 10;
+decomposition = 4;
+se = strel('disk', radius, decomposition);
+BW = imdilate(BW, se);
+
+% Fill holes
+BW = imfill(BW, 'holes');
+
 % Initialize output masked image based on input image.
 maskedRGBImage = RGB;
 

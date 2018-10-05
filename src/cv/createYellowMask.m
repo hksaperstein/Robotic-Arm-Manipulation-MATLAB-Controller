@@ -36,8 +36,8 @@ BW = imfilter(BW, [row; row; row]);
 
 BW = imfill(BW, 'holes');
 
-radius = 7;
-decomposition = 4;
+radius = 11;
+decomposition = 8;
 se = strel('disk', radius, decomposition);
 BW = imdilate(BW, se);
 
