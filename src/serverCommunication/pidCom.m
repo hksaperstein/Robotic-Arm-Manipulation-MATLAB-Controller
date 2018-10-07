@@ -4,9 +4,6 @@ function [return_packet] = pidCom(pp, ID, packet)
     packet(1) = packet(1) * conversionFactor;
     packet(4) = packet(4) * conversionFactor;
     packet(7) = packet(7) * conversionFactor;
-%     packet(2) = packet(2) * conversionFactor;
-%     packet(5) = packet(5) * conversionFactor;
-%     packet(8) = packet(8) * conversionFactor;
     
     return_packet = pp.command(ID, packet);
     
@@ -14,18 +11,4 @@ function [return_packet] = pidCom(pp, ID, packet)
     return_packet(1) = return_packet(1) * conversionFactor;
     return_packet(4) = return_packet(4) * conversionFactor;
     return_packet(7) = return_packet(7) * conversionFactor;
-    return_packet(3) = return_packet(3) * 4096;
-    return_packet(6) = return_packet(6) * 4096;
-    return_packet(9) = return_packet(9) * 4096;
-
-    joint1TOffset = 1977.483;
-    joint2TOffset = 1935.473;
-    joint3TOffset = 1404.343; 
-    k = 178.5;
-
-    return_packet(3) = (return_packet(3) - joint1TOffset) / k;
-    return_packet(6) = (return_packet(6) - joint2TOffset) / k;
-    return_packet(9) = (return_packet(9) - joint3TOffset) / k;
-
-%forceConversion = 
 return

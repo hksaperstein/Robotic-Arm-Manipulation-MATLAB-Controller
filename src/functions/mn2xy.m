@@ -11,7 +11,7 @@ tot_width_in_cm = (27.5);
 tot_height_in_cm = (20);
 
 %% read in data from xml
-xml = xmlread('calibrations/pixels.xml');
+xml = xmlread('initalize/CameraCalibration/pixels.xml');
 xml_pixels = xml.getElementsByTagName('pixel');
 pixels = zeros(5,2);
 for i = 1:5

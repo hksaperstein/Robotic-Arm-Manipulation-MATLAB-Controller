@@ -20,15 +20,16 @@ currentPosition = [175 0 -34.28];
 [x,z] = ginput(1);
 errorX = 100;
 errorZ = 100;
-while(errorX > 20 || errorZ > 20)
+while(errorX > 5 || errorZ > 5)
     
     nextPosition = inverseCalc(currentPosition, [x 0 z]);
     points = pose(nextPosition)
     currentPosition = [points(1, 4) points(2, 4) points(3, 4)]
-    set(R.handle, 'xdata', points(1,:), 'ydata', points(3,:));
+    
     errorX = abs(x - currentPosition(1))
     errorZ = abs(z - currentPosition(3))
-       
+    
+    set(R.handle, 'xdata', points(1,:), 'ydata', points(3,:));  
     plot([x, currentPosition(1)], [z, currentPosition(3)])
     drawnow()
 end 

@@ -3,8 +3,6 @@ px = position(1);
 py = position(2);
 pz = position(3);
 
-% sym (pi);
-
 l1 = 135;
 l2 = 175;
 l3 = 169.28;
@@ -19,15 +17,12 @@ l4 = sqrt((px^2)+(py^2)+((pz-l1)^2));
        
         
   if (theta1 > 90 || theta1 < -90)
-      theta1
         msg = 'Outside Normal Range';
         error(msg)
-  elseif (theta2 < 0 || theta2 > 100)
-      theta2
+  elseif (theta2 <-5 || theta2 > 90)
       msg = 'Outside Normal Range Joint 2';
       error(msg)
   elseif (theta3 < -10 || theta3 > 90)
-      theta3
        msg = 'Outside Normal Range Joint 3';
       error(msg)
      

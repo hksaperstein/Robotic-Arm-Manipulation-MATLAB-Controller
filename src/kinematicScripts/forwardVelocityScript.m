@@ -48,7 +48,7 @@ trajPoints = quinticTrajectoryPoints(totalTime, totalSteps, coordPos);
 grid on;
 view(3);
 axis([-0 400 -400 400 -50 450]);
-xlabel({'X Position (mm)'});
+xlabel({'X Position (mm)'});clear
 zlabel({'Z Position (mm)'});
 ylabel({'Y Position (mm)'});
 title({'3D Stick Plot of Arm'});
