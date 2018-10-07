@@ -52,26 +52,125 @@ try
 %         drawnow()
 %         pause(.1);
 %     end 
-    state = 'image';
-
-    currentPosition = base;
-    nextPosition = heavyBlue;
+    state = 'moveToBase';
+    previousState = 'moveToDropOff';
+    currentPosition = homePosition;
+    nextPosition = basePosition;
     tipVelocity = 25;
-    
+    image = snapshot(cam);
     totalTime = norm((nextPosition - currentPosition) / tipVelocity);
-    totalSteps = 10;
-%     switch state
-%         
-%         case 'image'
-%         case 'moveToBase'
-%         case 'moveToBall'
-%         case 'moveToDropOff'
-%         
-%         case 'gripperAction'
-%     end
-    quinticTrajectoryScript
-    
+    [newCoordinates, color] = imageProcess(image);
+    gripperCom(pp, GRIPPER_ID, gripper_packet, 1);
+    while(~strcmp('none',color))
+        switch state
 
+            case 'image'
+                image = snapshot(cam);
+                oldCoordinates = newCoordinates;
+                [newCoordinates, color] = imageProcess(image);
+                switch previousState
+                    case 'moveToBase'
+                        nextPosition = [(newCoordinates(x) + 175) newCoordinates(y) currentPosition(3)];
+                        state = 'moveOverBall';
+                    case 'moveOverBall'
+                        if(abs(oldCoordinates - newCoordinates) > 2)
+                            nextPosition = [(newCoordinates(x) + 175) newCoordinates(y) currentPosition(3)];
+                            state = 'moveOverBall';
+                        else
+                            nextPosition = [(oldCoordinates(x) + 175) oldCoordinates(y) ballZ];
+                            state = 'moveToBall';
+                        end
+                end
+                
+                previousState = 'image';
+            
+            case 'moveToBase'
+                
+                
+                quinticTrajectoryScript
+                
+                switch previousState
+                    %% ball gets weighed and moves to corresponding drop off positions
+                    case 'moveToBall'
+                        weight = 'heavy';
+                        switch weight
+                            case 'heavy'
+                                switch color
+                                    case 'blue'
+                                        nextPosition = heavyBlue;
+                                    case 'green'
+                                        nextPosition = heavyGreen;
+                                    case 'yellow'
+                                        nextPosition = heavyYellow;
+                                end
+                                
+                            case 'light'
+                                switch color
+                                    case 'blue'
+                                        nextPosition = lightBlue;
+                                    case 'green'
+                                        nextPosition = lightGreen;
+                                    case 'yellow'
+                                        nextPosition = lightYellow;
+                                end
+                        end
+                        state = 'moveToDropOff';
+                   
+                    case 'moveToDropOff'
+                       state = 'image';
+                end
+                
+                returnStatusPacket = statusCom(pp,STATUS_ID,status_packet);
+                returnStatusPacket = pose([returnStatusPacket(1) returnStatusPacket(4) returnStatusPacket(7)]);
+                currentPosition = [returnStatusPacket(1,4) returnStatusPacket(2,4) returnStatusPacket(3,4)];
+                
+                previousState = 'moveToBase';
+                
+                
+                
+            case 'moveOverBall'
+                
+                quinticTrajectoryScript;
+                
+                returnStatusPacket = statusCom(pp,STATUS_ID,status_packet);
+                returnStatusPacket = pose([returnStatusPacket(1) returnStatusPacket(4) returnStatusPacket(7)]);
+                currentPosition = [returnStatusPacket(1,4) returnStatusPacket(2,4) returnStatusPacket(3,4)];
+                
+                state = 'image';
+                previousState = 'moveOverBall';
+        
+            case 'moveToBall'
+                
+                
+                nextPosition = [currentPosition(x) currentPosition(y) ballZ];
+                
+                quinticTrajectoryScript;
+                gripperCom(pp, GRIPPER_ID, gripper_packet, 0);
+                
+                returnStatusPacket = statusCom(pp,STATUS_ID,status_packet);
+                returnStatusPacket = pose([returnStatusPacket(1) returnStatusPacket(4) returnStatusPacket(7)]);
+                currentPosition = [returnStatusPacket(1,4) returnStatusPacket(2,4) returnStatusPacket(3,4)];
+                nextPosition = basePosition;
+                
+                state = 'moveToBase';
+                previousState = 'moveToBall';
+            case 'moveToDropOff'
+                
+                
+                quinticTrajectoryScript
+                gripperCom(pp, GRIPPER_ID,gripper_packet, 1);
+                
+                returnStatusPacket = statusCom(pp,STATUS_ID,status_packet);
+                returnStatusPacket = pose([returnStatusPacket(1) returnStatusPacket(4) returnStatusPacket(7)]);
+                currentPosition = [returnStatusPacket(1,4) returnStatusPacket(2,4) returnStatusPacket(3,4)];
+                nextPosition = basePosition;
+                
+                state = 'moveToBase';
+                previousState = 'moveToDropOff';
+        end
+        state
+        previousState
+    end
 catch exception
     getReport(exception)
     disp('Exited on error, clean shutdown');

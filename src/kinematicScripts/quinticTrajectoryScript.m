@@ -24,18 +24,6 @@
     
     row = 0;
     time = 0;
-%     tic;
-%     t = linspace(0, totalTime, 100);
-%     y1 = [];
-%     y2 = [];
-%     y3 = [];
-%     for i = 1:size(t, 2)
-%         y1 = [y1,  quinticTrajectory(constantValuesX, t(i))];
-%         y2 = [y2,  quinticTrajectory(constantValuesY, t(i))];
-%         y3 = [y3,  quinticTrajectory(constantValuesZ, t(i))];
-%     end
-%     plot(t, y1(1:100), t, y2(1:100), t, y3(1:100));
-%     
     while(time < totalTime)
         tic;
         xPos = quinticTrajectory(constantValuesX, time);

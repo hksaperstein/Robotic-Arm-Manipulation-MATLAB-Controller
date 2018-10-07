@@ -1,4 +1,4 @@
-function [ centroid, color ] = Untitled( image )
+function [ centroid, color ] = imageProcess( image )
     %take image 
         %return a centroid and color (centroid is a 1x2 array, colour is a
         %string
@@ -6,22 +6,26 @@ function [ centroid, color ] = Untitled( image )
         %check for empty returned array
 
         [img2, img3] = createBlueMask(image);
-        b = regionProps(img2, 'centroid');
+        b = regionprops(img2, 'Centroid');
         [img6, img7] = createGreenMask(image);
-        g = regionProps(img6, 'centroid');
+        g = regionprops(img6, 'Centroid');
         [img4, img5] = createYellowMask(image);
-        y = regionProps(img4, 'centroid');
+        y = regionprops(img4, 'Centroid');
+        
+        bArray = struct2cell(b);
+        gArray = struct2cell(g);
+        yArray = struct2cell(y);
         %Check if blue has a centroid
-        if (~isempty(b.Centroid))
+        if (~isempty(bArray))
             centroid = b.Centroid;
             color = 'blue';
         %Check if green has a centroid 
-        elseif (~isempty(g.Centroid))
+        elseif (~isempty(gArray))
             centroid = g.Centroid;
             color = 'green';
         %Check if yellow has a centroid
-        elseif (~isempty(y.Centroid))
-            centroid = y.centroid
+        elseif (~isempty(yArray))
+            centroid = y.Centroid;
             color = 'yellow';
         else
             centroid = [];

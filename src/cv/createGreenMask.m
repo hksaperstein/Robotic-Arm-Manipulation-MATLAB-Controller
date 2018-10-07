@@ -14,15 +14,15 @@ function [BW,maskedRGBImage] = createGreenMask(RGB)
 I = rgb2hsv(RGB);
 
 % Define thresholds for channel 1 based on histogram settings
-channel1Min = 0.267;
-channel1Max = 0.483;
+channel1Min = 0.209;
+channel1Max = 0.487;
 
 % Define thresholds for channel 2 based on histogram settings
-channel2Min = 0.287;
-channel2Max = 0.691;
+channel2Min = 0.186;
+channel2Max = 1.000;
 
 % Define thresholds for channel 3 based on histogram settings
-channel3Min = 0.245;
+channel3Min = 0.261;
 channel3Max = 1.000;
 
 % Create mask based on chosen histogram thresholds
@@ -38,10 +38,10 @@ BW = imfilter(BW, [row; row; row]);
 BW = imfill(BW, 'holes');
 
 % Dilate mask with disk
-radius = 3;
-decomposition = 6;
-se = strel('disk', radius, decomposition);
-BW = imdilate(BW, se);
+radius = 10;
+se = strel('disk', radius);
+BW = imopen(BW, se);
+BW = imclose(BW, se);
 
 % Initialize output masked image based on input image.
 maskedRGBImage = RGB;

@@ -8,8 +8,5 @@ imgTestClr = imadd(img3, img5);
 imgFinalClr = imadd(imgTestClr, img7);
 imgTestBW = imadd(img4, img6);
 imgFinalBW = imadd(imgTestBW, double(img2));
-imshow(imgFinalClr)
-
-
-s = regionprops(imgFinalBW, 'centroid')
-mn2xy(s.Centroid(1), s.Centroid(2));
+imshow(imgFinalClr);
+[coordinates, color] = imageProcess(img)

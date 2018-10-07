@@ -14,15 +14,15 @@ function [BW,maskedRGBImage] = createBlueMask(RGB)
 I = rgb2hsv(RGB);
 
 % Define thresholds for channel 1 based on histogram settings
-channel1Min = 0.460;
-channel1Max = 0.588;
+channel1Min = 0.543;
+channel1Max = 0.609;
 
 % Define thresholds for channel 2 based on histogram settings
-channel2Min = 0.505;
+channel2Min = 0.500;
 channel2Max = 1.000;
 
 % Define thresholds for channel 3 based on histogram settings
-channel3Min = 0.476;
+channel3Min = 0.551;
 channel3Max = 1.000;
 
 % Create mask based on chosen histogram thresholds
@@ -38,16 +38,10 @@ BW = imfilter(BW, [row; row; row]);
 BW = imfill(BW, 'holes');
 
 % Open mask with disk
-radius = 7;
-decomposition = 4;
-se = strel('disk', radius, decomposition);
+radius = 15;
+se = strel('disk', radius);
 BW = imopen(BW, se);
-
-% Dilate mask with disk
-radius = 10;
-decomposition = 4;
-se = strel('disk', radius, decomposition);
-BW = imdilate(BW, se);
+BW = imclose(BW, se);
 
 % Fill holes
 BW = imfill(BW, 'holes');
