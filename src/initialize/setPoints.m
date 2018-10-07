@@ -1,4 +1,4 @@
-ballZ = 20;
+ballZ = -10;
 baseZ = 160;
 homePosition = [175 0 -34.28];
 basePosition = [180 0 baseZ];

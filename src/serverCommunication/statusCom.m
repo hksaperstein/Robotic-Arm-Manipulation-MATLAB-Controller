@@ -18,5 +18,5 @@
     k3 = 40;
     packet(3) = ((packet(3) - joint1TOffset) / k1);
     packet(6) = -((packet(6) - joint2TOffset) / k2);
-    packet(9) = -((packet(9) - joint3TOffset) / k3);
+    packet(9) = ((packet(9) - joint3TOffset) / k3);
  return
