@@ -47,10 +47,17 @@ sf_cur = percentage * (sf_arm - sf_cam) + sf_cam;
 y = sf_cur * (m - hole_pixel(1));
 cam_height = 33;
 ball_height = 5.5;
-actualOffset = 14.75 - x;
+actualOffset = sqrt(x^2 + y^2)
 thetaX = atan2(cam_height, actualOffset);
 imageOffset = ball_height/tan(thetaX);
-outarr = [(x-imageOffset),y];
+
+thetaOffset = atan2(y,x);
+
+
+xOffset = cos(thetaOffset) * imageOffset;
+yOffset = sin(thetaOffset) * imageOffset;
+y = y - yOffset
+outarr = [x,y]
 end
 
 % burrows into xml object and rips out numbers
