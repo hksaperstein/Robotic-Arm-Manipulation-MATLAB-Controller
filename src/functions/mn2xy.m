@@ -56,7 +56,8 @@ thetaOffset = atan2(y,x);
 
 xOffset = cos(thetaOffset) * imageOffset;
 yOffset = sin(thetaOffset) * imageOffset;
-y = y - yOffset
+y = y - yOffset;
+x = x - xOffset;
 outarr = [x,y]
 end
 
