@@ -7,8 +7,8 @@
 % run the provided "calibrate_camera.m" function prior to its use.
 function [ outarr ] = mn2xy( m,n )
 %% define calibration distance constants
-tot_width_in_cm = (28.5);
-tot_height_in_cm = (22);
+tot_width_in_cm = (29.5);
+tot_height_in_cm = (24);
 
 %% read in data from xml
 xml = xmlread('initialize/CameraCalibration/pixels.xml');
@@ -45,7 +45,12 @@ sf_arm = (tot_width_in_cm/arm_width_in_pix);
 percentage = (cam_height_in_pix-n)/(tot_height_in_pix);
 sf_cur = percentage * (sf_arm - sf_cam) + sf_cam;
 y = sf_cur * (m - hole_pixel(1));
-outarr = [x,y];
+cam_height = 33;
+ball_height = 5.5;
+actualOffset = 14.75 - x;
+thetaX = atan2(cam_height, actualOffset);
+imageOffset = ball_height/tan(thetaX);
+outarr = [(x-imageOffset),y];
 end
 
 % burrows into xml object and rips out numbers
