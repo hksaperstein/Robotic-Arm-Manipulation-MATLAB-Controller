@@ -1,7 +1,7 @@
 ballZ = -10;
-baseZ = 160;
+baseZ = 280;
 homePosition = [175 0 -34.28];
-basePosition = [200 0 baseZ];
+basePosition = [169.28 0 baseZ];
 heavyBlue = [35 -240 90];
 heavyYellow = [140 -240 90];
 heavyGreen = [220 -240 90];

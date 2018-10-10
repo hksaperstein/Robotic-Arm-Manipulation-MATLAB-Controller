@@ -45,19 +45,31 @@ sf_arm = (tot_width_in_cm/arm_width_in_pix);
 percentage = (cam_height_in_pix-n)/(tot_height_in_pix);
 sf_cur = percentage * (sf_arm - sf_cam) + sf_cam;
 y = sf_cur * (m - hole_pixel(1));
-cam_height = 33;
-ball_height = 5.5;
-actualOffset = sqrt(x^2 + y^2)
-thetaX = atan2(cam_height, actualOffset);
-imageOffset = ball_height/tan(thetaX);
-
-thetaOffset = atan2(y,x);
 
 
-xOffset = cos(thetaOffset) * imageOffset;
-yOffset = sin(thetaOffset) * imageOffset;
-y = y - yOffset;
-x = x - xOffset;
+cam_height = 30;
+ball_height = 4.5;
+camOffset = 14;
+centerOffset = camOffset - x
+
+actualOffset = sqrt(centerOffset^2 + y^2)
+thetaBall = atan2(cam_height, actualOffset);
+offset = ball_height/tan(thetaBall);
+
+camOffset = 14;
+
+centerOffset = camOffset - x;
+
+thetaOffset = acos(centerOffset / actualOffset);
+
+xOffset = cos(thetaOffset) * offset;
+yOffset = sin(thetaOffset) * offset;
+if y < 0
+    y = y - yOffset + 3;
+else
+    y = y - yOffset;
+end
+x = x + xOffset;
 outarr = [x,y]
 end
 

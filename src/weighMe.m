@@ -33,7 +33,7 @@
         torqueJ1 = return_status_packet(3);
         torqueJ2 = return_status_packet(6);
         torqueJ3 = return_status_packet(9);
-        torqueJ30 = torqueJ30 + torqueJ3;
+        torqueJ30 = torqueJ30 + torqueJ3 - torqueOffset;
 %         torques = [torqueJ1 torqueJ2 torqueJ3] - torques0;
 %         tipForces = tipForces + inverseForce(torques, jacobian(1:3,1:3))*1000;
 %         points = pose([return_status_packet(1) return_status_packet(4) return_status_packet(7)])
@@ -44,7 +44,7 @@
     end 
     torqueJ30 = torqueJ30 / 10
 
-    if (torqueJ30 < -21.95)
+    if (torqueJ30 < -2)
         weight = 'heavy'
     else 
         weight = 'light'

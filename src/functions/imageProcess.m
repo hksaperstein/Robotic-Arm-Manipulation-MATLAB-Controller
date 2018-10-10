@@ -6,6 +6,7 @@ function [ centroid, color ] = imageProcess( image )
         %check for empty returned array
 
         [img2, img3] = createBlueMask(image);
+       
         b = regionprops(img2, 'Centroid');
         [img6, img7] = createGreenMask(image);
         g = regionprops(img6, 'Centroid');
