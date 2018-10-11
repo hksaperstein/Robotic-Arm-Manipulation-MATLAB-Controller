@@ -86,25 +86,16 @@ try
     currentPosition = [returnStatusPacket(1,4) returnStatusPacket(2,4) returnStatusPacket(3,4)];
     torqueOffset = 0;
     for i = 1:10
-%         time = toc(tic);
         return_status_packet = statusCom(pp, STATUS_ID, status_packet);
         jacobian = jacob0([return_status_packet(1) return_status_packet(4) return_status_packet(7)]);
         torqueJ1 = return_status_packet(3);
         torqueJ2 = return_status_packet(6);
         torqueJ3 = return_status_packet(9);
         torqueOffset = torqueOffset + torqueJ3;
-%         torques = [torqueJ1 torqueJ2 torqueJ3] - torques0;
-%         tipForces = tipForces + inverseForce(torques, jacobian(1:3,1:3))*1000;
-%         points = pose([return_status_packet(1) return_status_packet(4) return_status_packet(7)])
-%         set(R.handle, 'xdata', points(1,:), 'ydata', points(2,:),'zdata', points(3,:));
-%         set(Q.handle, 'xdata', points(1,4), 'ydata', points(2,4),'zdata', points(3,4),'UData', double(tipForces(1)), 'VData', double(tipForces(2)), 'WData', double(tipForces(3)), 'MaxHeadSize', 200);
-%         drawnow()
         pause(.1);
     end 
     torqueOffset = torqueOffset / 10;
-     
     image = snapshot(cam);
-    
     imshow(image)
     [newCoordinates, color] = imageProcess(image);
     
@@ -167,7 +158,18 @@ try
                         state = 'moveToDropOff';
                    
                     case 'moveToDropOff'
-                       state = 'image';
+                        torqueOffset = 0;
+                        for i = 1:10
+                            return_status_packet = statusCom(pp, STATUS_ID, status_packet);
+                            jacobian = jacob0([return_status_packet(1) return_status_packet(4) return_status_packet(7)]);
+                            torqueJ1 = return_status_packet(3);
+                            torqueJ2 = return_status_packet(6);
+                            torqueJ3 = return_status_packet(9);
+                            torqueOffset = torqueOffset + torqueJ3;
+                            pause(.1);
+                        end 
+                        torqueOffset = torqueOffset / 10;
+                        state = 'image';
                 end
                 
                 returnStatusPacket = statusCom(pp,STATUS_ID,status_packet);
@@ -219,6 +221,8 @@ try
                 
                 state = 'moveToBase';
                 previousState = 'moveToDropOff';
+            otherwise
+                
         end
         state
         previousState

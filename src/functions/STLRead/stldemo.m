@@ -12,8 +12,8 @@
 % suitable for use with MATLAB's PATCH graphics object.
 
 % Import an STL mesh, returning a PATCH-compatible face-vertex structure
-%fv = stlread('2-elbow.stl');
-S := plot::SurfaceSTL('2-elbow.stl')
+fv = stlread('basePan.stl');
+%
 
 %% Render
 % The model is rendered with a PATCH graphics object. We also add some dynamic
