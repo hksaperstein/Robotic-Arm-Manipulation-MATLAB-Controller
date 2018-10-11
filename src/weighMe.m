@@ -44,10 +44,12 @@
     end 
     torqueJ30 = torqueJ30 / 10
 
-    if (torqueJ30 < -2)
+    if (torqueJ30 < -2.2)
         weight = 'heavy'
-    else 
+    elseif (torqueJ30 > -2.19 && torqueJ30 < -1.89)
         weight = 'light'
+    elseif (torqueJ30 > -1.89)
+        weight = 'noWeight'
     end
     
     
