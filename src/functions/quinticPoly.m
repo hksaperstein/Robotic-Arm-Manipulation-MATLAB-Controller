@@ -6,7 +6,7 @@ function [values] = quinticPoly(startP, endP, startT, endT, startV, endV, startA
                        0 1 (2*endT) (3*endT^2) (4*endT^3) (5*endT^4);
                        0 0 2 (6*endT) (12*endT^2) (20*endT^3)];
                   
-    equationsMatrix = inv(equationsMatrix);
+%     equationsMatrix = inv(equationsMatrix);
     
-    values = equationsMatrix * [startP; startV; startA; endP;  endV; endA];
+    values = equationsMatrix \ [startP; startV; startA; endP;  endV; endA];
     values = values';

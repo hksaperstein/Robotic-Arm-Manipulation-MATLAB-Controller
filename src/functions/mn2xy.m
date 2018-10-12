@@ -5,13 +5,13 @@
 %
 % In addition:  this function assumes that you have successfully
 % run the provided "calibrate_camera.m" function prior to its use.
-function [ outarr ] = mn2xy( m, n )
+function [ outarr ] = mn2xy( m,n )
 %% define calibration distance constants
-tot_width_in_cm = 25;
-tot_height_in_cm = 18;
+tot_width_in_cm = (29.5);
+tot_height_in_cm = (24);
 
 %% read in data from xml
-xml = xmlread('calibrations/pixels.xml');
+xml = xmlread('initialize/CameraCalibration/pixels.xml');
 xml_pixels = xml.getElementsByTagName('pixel');
 pixels = zeros(5,2);
 for i = 1:5
@@ -19,27 +19,60 @@ for i = 1:5
 end
 
 %% organizing data by row.  2nd col *should* be consistent
-arm_pixels = pixels(1:2,:)
+arm_pixels = pixels(1:2,:);
 hole_pixel = pixels(3,:);
 cam_pixels = pixels(4:5,:);
 
 %% commonly re-used calibration parameter
 cam_height_in_pix = mean(cam_pixels(:,2));
 arm_height_in_pix = mean(arm_pixels(:,2));
+arm_to_hole = hole_pixel(2) - arm_height_in_pix;
+cam_to_hole = cam_height_in_pix - hole_pixel(2);
 tot_height_in_pix = cam_height_in_pix - arm_height_in_pix;
 cam_width_in_pix  = cam_pixels(end,1) - cam_pixels(1,1);
 arm_width_in_pix  = arm_pixels(end,1) - arm_pixels(1,1);
 
 %% calculate x using n
-x = (tot_height_in_cm/tot_height_in_pix)*(n - hole_pixel(2));
-
+xdist = (n - hole_pixel(2));
+if xdist < 0
+x = ((tot_height_in_cm*.45)/(arm_to_hole))*(xdist);
+else
+x = ((tot_height_in_cm*.55)/(cam_to_hole))*(xdist);
+end
 %% calculate y using m and n
 sf_cam = (tot_width_in_cm/cam_width_in_pix); %interpolate between
 sf_arm = (tot_width_in_cm/arm_width_in_pix);
-percentage = (n-cam_height_in_pix)/(tot_height_in_pix);
+percentage = (cam_height_in_pix-n)/(tot_height_in_pix);
 sf_cur = percentage * (sf_arm - sf_cam) + sf_cam;
 y = sf_cur * (m - hole_pixel(1));
-outarr = [x,y];
+% 
+y = y * 0.781202165402116 - 0.730697715567717;
+x = x * 0.778228071819569 + 2.13698674326492;
+% cam_height = 30;
+% ball_height = 4.5;
+% camOffset = 14;
+% centerOffset = camOffset - x;
+% 
+% actualOffset = sqrt(centerOffset^2 + y^2);
+% thetaBall = atan2(cam_height, actualOffset);
+% offset = ball_height/tan(thetaBall);
+% 
+% camOffset = 14;
+% 
+% centerOffset = camOffset - x;
+% 
+% thetaOffset = acos(centerOffset / actualOffset);
+% 
+% xOffset = cos(thetaOffset) * offset;
+% yOffset = sin(thetaOffset) * offset;
+% if y < 0
+%     y = y - yOffset + 3;
+% else
+%     y = y - yOffset;
+% end
+% x = x + xOffset;
+% 
+ outarr = [x,y];
 end
 
 % burrows into xml object and rips out numbers

@@ -1,0 +1,11 @@
+ballZ = -10;
+baseZ = 280;
+dynamicZ = 150;
+homePosition = [175 0 -34.28];
+basePosition = [169.28 0 baseZ];
+heavyBlue = [35 -240 ballZ];
+heavyYellow = [120 -240 ballZ];
+heavyGreen = [190 -240 ballZ];
+lightBlue = [35 240 ballZ];
+lightYellow = [120 240 ballZ];
+lightGreen = [190 240 ballZ];

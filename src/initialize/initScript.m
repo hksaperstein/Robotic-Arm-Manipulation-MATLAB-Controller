@@ -20,3 +20,4 @@ myHIDSimplePacketComs=HIDfactory.get();
 myHIDSimplePacketComs.setPid(pid);
 myHIDSimplePacketComs.setVid(vid);
 myHIDSimplePacketComs.connect();
+cam = webcam;

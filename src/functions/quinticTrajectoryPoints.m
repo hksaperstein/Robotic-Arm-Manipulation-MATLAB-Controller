@@ -1,30 +1,29 @@
-function [ points ] = quinticTrajectoryPoints( totalTime, totalSteps, positions )
+%% Takes in single path time, path steps, startposition and endposition
 
+function [ points ] = quinticTrajectoryPoints( totalTime, totalSteps, startPosition, endPosition )
+    x = 1;
+    y = 2;
+    z = 3;
 
-start1x = positions(1, 1);
-start1y = positions(1, 2);
-start1z = positions(1, 3);
-
-points = zeros(sum(totalSteps), 3);
-[m,n] = size(positions);
-row = 1;
-for k = 1:(m - 1)
-    timer = tic;
-    constantValuesX = quinticPoly(start1x, positions(k+1, 1), 0, totalTime(k), 0, 0, 0, 0);
-    constantValuesY = quinticPoly(start1y, positions(k+1, 2), 0, totalTime(k), 0, 0, 0, 0);
-    constantValuesZ = quinticPoly(start1z, positions(k+1, 3), 0, totalTime(k), 0, 0, 0, 0);
     
-    for j = 1:totalSteps(k)
-        time = toc(timer);
-        xPos = quinticTrajectory(constantValuesX, time);
-        yPos = quinticTrajectory(constantValuesY, time);
-        zPos = quinticTrajectory(constantValuesZ, time);
-        points(row,:) = ikin([xPos yPos zPos]);
-        pause(totalTime(k)/totalSteps(k));
-        row = row +1;
+   
+    constantValuesX = quinticPoly(startPosition(x), endPosition(x), 0, totalTime, 0, 0, 0, 0);
+    constantValuesY = quinticPoly(startPosition(y), endPosition(y), 0, totalTime, 0, 0, 0, 0);
+    constantValuesZ = quinticPoly(startPosition(z), endPosition(z), 0, totalTime, 0, 0, 0, 0);
+    
+    row = 0;
+    time = 0;
+    points = zeros(totalSteps, 3);
+    for j = 1:totalSteps
+        time = time + (totalTime/totalSteps);
+        xPos = quinticTrajectory(constantValuesX, time)
+        yPos = quinticTrajectory(constantValuesY, time)
+        zPos = quinticTrajectory(constantValuesZ, time)
+        row = row + 1;
+        points(row,:) = ikin([xPos yPos zPos]); 
+        
     end
-    start1x = positions(k+1, 1);
-    start1y = positions(k+1, 2);
-    start1z = positions(k+1, 3);
-end
+    
+% returns 2D array of step set points in cartesian
+return
 

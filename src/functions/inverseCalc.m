@@ -6,13 +6,15 @@ function [ nextPos] = inverseCalc(currentPos, endPos)
     % totalSteps = [15 30 25 30 50];
     %trajPoints = quinticTrajectoryPoints(totalTime, totalSteps, coordPos);
     
-    ang = ikin(currentPos)
-    jacobian = jacob0(ang)
-    timeElapsed = .1
-    posVector = endPos - currentPos
-    velVector = posVector / (timeElapsed)
-    angVel = inverseVelKin(jacobian, velVector)
-    nextPos = ang + angVel' * (timeElapsed)
+    ang = ikin(currentPos);
+    jacobian = jacob0(ang);
+    timeElapsed = .1;
+    posVector = endPos - currentPos;
+    posVector = posVector'
+    posVector = posVector';
+    velVector = posVector / (timeElapsed);
+    angVel = inverseVelKin(jacobian, velVector);
+    nextPos = ang + angVel' * (timeElapsed);
    
 end
 
